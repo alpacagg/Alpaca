@@ -23,7 +23,7 @@ def main():
 
     # Initialize and run bot
     try:
-        bot = AlpacaBot(intents=intents)
+        bot = AlpacaBot(intents=intents, command_prefix="a!")
         bot.run(token)
     except Exception as e:
         print(f"Failed to start bot: {e}")
