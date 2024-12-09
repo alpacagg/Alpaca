@@ -5,7 +5,10 @@ import discord
 from discord import Intents
 from discord.ext.commands import Bot
 from typing import Any, Optional, List
-from utils.logging import Logger
+
+from src.database.database import init_db, close_db
+from src.utils.logging import Logger
+
 
 class AlpacaBot(Bot):
     def __init__(self, *, intents: Intents, **options: Any) -> None:
@@ -30,6 +33,12 @@ class AlpacaBot(Bot):
     async def on_guild_remove(self, guild: discord.Guild):
         """Logs when bot is removed from a guild."""
         self._log.info(f"Removed from guild: {guild.name} (ID: {guild.id})")
+
+    async def on_close(self):
+        """Triggered when the bot shuts down."""
+        self._log.info('Shutting down...')
+        await close_db()
+        await super().close()
 
     async def _load_extensions(self, cogs_dir: Optional[str] = None) -> List[str]:
         """
@@ -64,7 +73,6 @@ class AlpacaBot(Bot):
                     relative_path = os.path.relpath(full_path, start=cogs_dir)
                     module_path = os.path.splitext(relative_path)[0].replace(os.path.sep, '.')
                     cog_path = f"{cogs_dir.replace('/', '.')}.{module_path}"
-                    cog_path = cog_path[4:]
 
                     try:
                         # Load the extension
@@ -86,5 +94,6 @@ class AlpacaBot(Bot):
         Async setup method called when the bot starts.
         Used for loading extensions and any initial setup.
         """
-        # Load all cogs
+        # Load all cogs and database
+        await init_db()
         await self._load_extensions()
