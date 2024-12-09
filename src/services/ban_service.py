@@ -1,7 +1,7 @@
 from datetime import date
 from typing_extensions import Optional
 from src.database.repositories.ban_repository import BanRepository
-from src.exceptions.bans_exception import NoBansFoundError
+from src.exceptions.ban_exception import NoBansFoundError
 
 
 class BanService:
@@ -22,6 +22,6 @@ class BanService:
     async def unban_user(user_id: int):
         bans = await BanService.get_bans_by_user(user_id)
         if not bans:
-            raise NoBansFoundError("No bans found for the user", 404)
+            raise NoBansFoundError("No bans found for the user")
         for ban in bans:
             await BanRepository.delete_ban(ban.id_ban)
