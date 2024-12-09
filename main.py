@@ -4,7 +4,8 @@ import sys
 import dotenv
 from discord import Intents
 
-from bot import AlpacaBot
+from src.bot import AlpacaBot
+from src.repositories.repositories import Repositories
 
 
 def main():
@@ -17,6 +18,15 @@ def main():
     if not token:
         print("Error: DISCORD_BOT_TOKEN not found in .env file")
         sys.exit(1)
+
+    # Get owner id from environment
+    owner_id = os.getenv('OWNER_ID')
+    if not owner_id:
+        print("Error: OWNER_ID not found in .env file")
+        sys.exit(1)
+
+    # Initialize repositories
+    Repositories.get_instance().get_config_repository().set_owner(int(owner_id))
 
     # Configure intents
     intents = Intents.default()
