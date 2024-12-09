@@ -27,7 +27,7 @@ class BanRepository:
         :param end_date: End date of the temporary ban.
         :return: The created TemporaryBan object.
         """
-        temp_ban = await TemporaryBan.create(id_temporary_ban=ban_id, endDate=end_date)
+        temp_ban = await TemporaryBan.create(id_temporary_ban=ban_id, end_date=end_date)
         return temp_ban  # Return the TemporaryBan instance
 
     @staticmethod
